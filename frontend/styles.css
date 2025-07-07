@@ -1,0 +1,62 @@
+/* styles.css */
+html, body {
+  margin: 0; padding: 0;
+  height: 100%; width: 100%;
+  background: url('assets/background.jpg') center/cover no-repeat;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.title-bar {
+  position: absolute; top: 0; left: 0;
+  height: 32px; width: 100%;
+  -webkit-app-region: drag;
+  display: flex; align-items: center; padding: 0 10px;
+}
+
+.btn {
+  -webkit-app-region: no-drag;
+  height: 12px; width: 12px; margin-right: 8px; border-radius: 50%;
+}
+.btn.close { background: #ff5f57; }
+.btn.minimize { background: #ffbd2e; }
+.btn.maximize { background: #28c940; }
+
+.glass-panel {
+  backdrop-filter: blur(30px) brightness(1.2);
+  background: rgba(255,255,255,0.15);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  padding: 60px 40px;
+  text-align: center;
+  color: #fff;
+  max-width: 400px;
+  width: 100%;
+}
+
+.glass-panel h1 {
+  margin: 0; font-size: 2em;
+  letter-spacing: 0.5px;
+}
+
+.glass-panel p {
+  margin: 16px 0;
+  font-size: 1em;
+  opacity: 0.85;
+}
+
+.action {
+  margin-top: 24px;
+  padding: 12px 24px;
+  font-size: 1em;
+  color: #fff;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.action:hover {
+  background: rgba(0,0,0,0.5);
+}
