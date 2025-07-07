@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/app_icon.icns" alt="DocuMancer" width="300"/>
+  <img src="assets/logo.png" alt="DocuMancer" width="300"/>
 </p>
 
 # DocuMancer
