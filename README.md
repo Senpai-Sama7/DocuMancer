@@ -1,8 +1,11 @@
 <p align="center">
   <img src="assets/logo.png" alt="DocuMancer" width="300"/>
 </p>
+
 ---
+
 # DocuMancer
+
 ---
 A modern Electron application for document conversion and management, built with a Python backend and Electron frontend.
 
