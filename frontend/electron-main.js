@@ -47,6 +47,7 @@ async function ensureBackendReady() {
       const response = await fetch(`${BACKEND_URL}/health`)
       if (response.ok) return
     } catch (err) {
+      console.log(`Backend health check failed (attempt ${i + 1}/${maxAttempts}): ${err.message}`)
       // continue retrying until healthy
     }
     await new Promise(resolve => setTimeout(resolve, delay))
