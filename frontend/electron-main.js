@@ -71,7 +71,11 @@ function startBackend() {
 
   backendProcess = spawn(finalPythonExec, [backendEntry], {
     cwd: appPath,
-    stdio: ['ignore', 'pipe', 'pipe']
+})
+
+backendProcess.on('error', err => {
+  console.error('Failed to start backend process:', err)
+})
   })
 
   backendProcess.stdout.on('data', data => {
