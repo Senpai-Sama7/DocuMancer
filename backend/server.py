@@ -108,16 +108,15 @@ async def request_context(request: Request, call_next):  # noqa: D401
   start = time.perf_counter()
   try:
     response = await call_next(request)
-  finally:
-    duration_ms = round((time.perf_counter() - start) * 1000, 2)
-    logger.info(
-      json.dumps(
-        {
-          "path": request.url.path,
-          "method": request.method,
-          "duration_ms": duration_ms,
-        }
-      ),
+  logger.info(
+    "Request finished",
+    extra={
+      "request_id": request_id,
+      "path": str(request.url.path),
+      "method": request.method,
+      "duration_ms": duration_ms,
+    },
+  )
       extra={"request_id": request_id},
     )
   response.headers["x-request-id"] = request_id
