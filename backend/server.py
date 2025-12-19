@@ -62,6 +62,9 @@ async def convert(request: ConvertRequest):
     except FileNotFoundError as missing:
       logger.warning("File not found: %s", file_path)
       results.append(ConversionResult(file=file_path, status="error", message=str(missing)))
+    except ValueError as exc:
+      logger.warning("Unsupported format for %s: %s", file_path, exc)
+      results.append(ConversionResult(file=file_path, status="error", message=str(exc)))
     except Exception as exc:  # noqa: BLE001
       logger.exception("Failed to convert %s", file_path)
       results.append(ConversionResult(file=file_path, status="error", message=str(exc)))
