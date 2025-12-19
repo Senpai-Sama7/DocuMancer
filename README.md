@@ -50,6 +50,7 @@ DocuMancer/
    ```bash
    pip install -r backend/requirements.txt
    ```
+   - Fallback (unlocked): `pip install -r backend/requirements.txt`
 
 ### Development
 
