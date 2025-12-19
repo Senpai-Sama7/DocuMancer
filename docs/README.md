@@ -1,43 +1,47 @@
 # Packaging & Distribution
 
-We use [Electron Builder](https://www.electron.build/) to create native installers:
+DocuMancer uses [Electron Builder](https://www.electron.build/) to produce installers that include the Electron frontend and bundled Python backend.
 
 ## Install builder
 
 ```bash
-npm install --save-dev electron-builder
+npm install
+```
+
+Prepare the Python backend with the pinned dependency set:
+
+```bash
+./scripts/setup-backend.sh
 ```
 
 ## package.json scripts
 
 ```json
 {
-  "name": "h2aicv",
+  "name": "documancer",
   "version": "2.1.0",
   "description": "Advanced Document to AI-Optimized JSON Converter",
-  "main": "electron-main.js",
+  "main": "frontend/electron-main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dev": "ELECTRON_ENABLE_LOGGING=1 electron .",
+    "pack": "electron-builder --config electron-builder.yml --dir",
+    "dist": "electron-builder --config electron-builder.yml",
+    "lint": "eslint frontend/*.js",
+    "test:backend": "pytest"
   },
   "build": {
-    "appId": "com.yourcompany.h2aicv",
-    "productName": "H2AICV",
+    "appId": "com.yourcompany.documancer",
+    "productName": "DocuMancer",
     "files": [
-      "electron-main.js",
-      "preload.js",
-      "index.html",
-      "styles.css",
-      "renderer.js",
-      "assets/**/*"
+      "frontend/**/*",
+      "backend/**/*",
+      "assets/**/*",
+      "package.json"
     ],
     "win": {
-      "target": [
-        "nsis",
-        "zip"
-      ],
-      "artifactName": "${productName}-Setup-${version}.${ext}"
+      "target": ["nsis", "zip"],
+      "artifactName": "DocuMancer-Setup-${version}.${ext}"
     },
     "nsis": {
       "oneClick": false,
@@ -45,10 +49,7 @@ npm install --save-dev electron-builder
       "allowToChangeInstallationDirectory": true
     },
     "mac": {
-      "target": [
-        "dmg",
-        "zip"
-      ],
+      "target": ["dmg", "zip"],
       "category": "public.app-category.productivity"
     },
     "dmg": {
@@ -60,16 +61,9 @@ npm install --save-dev electron-builder
       ]
     },
     "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ],
+      "target": ["AppImage", "deb"],
       "category": "Utility"
     }
-  },
-  "devDependencies": {
-    "electron": "^12.0.0",
-    "electron-builder": "^22.0.0"
   }
 }
 ```
@@ -84,10 +78,4 @@ npm run pack
 npm run dist
 ```
 
-After `npm run dist` you’ll find:
-
-- `dist/H2AICV-Setup-2.1.0.exe` & `dist/H2AICV-2.1.0.zip` (Windows)
-- `dist/H2AICV-2.1.0.dmg` & `dist/H2AICV-2.1.0.zip` (macOS)
-- `dist/H2AICV-2.1.0.AppImage`, `dist/H2AICV-2.1.0.deb` (Linux)
-
-Distribute these directly to users for a one-click install on each OS.
+After `npm run dist` you’ll find installers under `dist/` for Windows, macOS, and Linux targets.

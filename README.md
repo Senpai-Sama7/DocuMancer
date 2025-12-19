@@ -7,31 +7,31 @@
 # DocuMancer
 
 ---
-A modern Electron application for document conversion and management, built with a Python backend and Electron frontend.
+A modern Electron application for document conversion and management, built with a hardened Python backend and Electron frontend.
 
 ## 🏗️ Project Structure
 
 ```
 DocuMancer/
 ├── assets/                 # Static assets (icons, backgrounds)
-├── backend/               # Python backend services
-├── docs/                  # Documentation
-├── frontend/              # Electron frontend application
-├── scripts/               # Build and deployment scripts
-├── shared/                # Shared utilities and constants
-├── tests/                 # Test files
-├── electron-builder.yml   # Electron builder configuration
-├── package.json           # Node.js dependencies and scripts
-└── README.md             # This file
+├── backend/                # Python backend services
+├── docs/                   # Documentation
+├── frontend/               # Electron frontend application
+├── scripts/                # Build and deployment scripts
+├── shared/                 # Shared utilities and constants
+├── tests/                  # Test files
+├── electron-builder.yml    # Electron builder configuration
+├── package.json            # Node.js dependencies and scripts
+└── README.md               # This file
 ```
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- Python 3.8+
-- npm or yarn
+- Node.js (v20 or higher)
+- Python 3.11+
+- npm
 
 ### Installation
 
@@ -41,34 +41,46 @@ DocuMancer/
    cd DocuMancer
    ```
 
-2. **Install Node.js dependencies**
+2. **Install Node.js dependencies** (installs Electron, preload tooling, and linting)
    ```bash
    npm install
    ```
 
-3. **Install Python dependencies**
+3. **Install Python dependencies** (FastAPI service + converter stack)
+   - Preferred: create a local virtualenv and install pinned versions from `backend/requirements.lock.txt` via the helper script.
    ```bash
-   cd backend
-   pip install -r requirements.txt
-   cd ..
+   ./scripts/setup-backend.sh
    ```
+   - Fallback (unlocked): `pip install -r backend/requirements.txt`
 
 ### Development
 
-1. **Start the development server**
+1. **Run the app in development** – starts Electron and will spawn the FastAPI backend when conversions are requested:
    ```bash
    npm run dev
    ```
 
-2. **Build the application**
+2. **Lint frontend code**
    ```bash
-   npm run build
+   npm run lint
    ```
 
-3. **Package for distribution**
+3. **Run backend tests**
    ```bash
-   npm run dist
+   npm run test:backend
    ```
+
+### Packaging
+
+Electron Builder is configured via `electron-builder.yml` to bundle both the frontend and backend:
+
+```bash
+# produce unpacked directories
+npm run pack
+
+# produce installers (.exe, .dmg, .AppImage, .deb)
+npm run dist
+```
 
 ## 📁 Directory Structure
 
@@ -80,6 +92,7 @@ DocuMancer/
 - `styles.css` - Application styles
 
 ### Backend (`backend/`)
+- `server.py` - FastAPI wrapper with health and conversion endpoints
 - `converter.py` - Document conversion logic
 - `requirements.txt` - Python dependencies
 - `__init__.py` - Python package initialization
@@ -93,49 +106,33 @@ DocuMancer/
 
 ### Electron Builder (`electron-builder.yml`)
 - Configures build targets for Windows, macOS, and Linux
-- Sets up DMG installer with custom background
+- Includes backend, frontend, and assets for packaging
 - Defines application metadata and categories
 
 ### Package Configuration (`package.json`)
 - Defines application metadata
-- Contains build and development scripts
+- Contains build, packaging, lint, and test scripts
 - Manages Node.js dependencies
-
-## 🎨 Asset Requirements
-
-### Background Images
-- **background.jpg**: 1920x1080 pixels (Full HD) for main app background
-- **dmg-background.png**: 540x380 pixels for macOS DMG installer
-
-### Icons
-- **app_icon.icns**: macOS application icon (512x512 pixels recommended)
 
 ## 🧪 Testing
 
 ```bash
-# Run tests
-npm test
+# Run backend tests via npm wrapper
+npm run test:backend
 
-# Run backend tests
-cd backend && python -m pytest
+# Or directly
+pytest -q
 ```
 
-## 📦 Building
+## 🧱 Backend configuration
 
-### Development Build
-```bash
-npm run build
-```
+The Electron shell launches `backend/server.py` with environment-driven settings:
 
-### Production Distribution
-```bash
-npm run dist
-```
+- `DOCUMANCER_HOST` / `DOCUMANCER_PORT` – override bind address and port
+- `DOCUMANCER_LOG_LEVEL` – `DEBUG`, `INFO`, `WARNING`, etc.
+- `DOCUMANCER_LOG_DIR` – folder for rotating JSON logs
 
-This will create:
-- **Windows**: NSIS installer and ZIP
-- **macOS**: DMG and ZIP
-- **Linux**: AppImage and DEB
+Each request returns an `x-request-id` header and uses structured logging for correlation.
 
 ## 🤝 Contributing
 
@@ -151,8 +148,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🐛 Issues
 
-If you encounter any issues, please [open an issue](https://github.com/yourusername/DocuMancer/issues) on GitHub.
+If you encounter any issues, please open an issue on GitHub.
 
-## 📞 Support
-
-For support and questions, please contact [your-email@example.com](mailto:your-email@example.com).
