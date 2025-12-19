@@ -7,6 +7,12 @@ html, body {
   display: flex; align-items: center; justify-content: center;
 }
 
+body {
+  gap: 24px;
+  align-items: flex-start;
+  padding-top: 80px;
+}
+
 .title-bar {
   position: absolute; top: 0; left: 0;
   height: 32px; width: 100%;
@@ -59,4 +65,66 @@ html, body {
 
 .action:hover {
   background: rgba(0,0,0,0.5);
+}
+
+.status-panel {
+  backdrop-filter: blur(20px);
+  background: rgba(0,0,0,0.45);
+  border-radius: 16px;
+  padding: 24px;
+  width: 420px;
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+.status-panel h2 {
+  margin-top: 0;
+}
+
+#message {
+  margin: 8px 0 16px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+}
+
+#message[data-tone="success"] { background: rgba(46, 204, 113, 0.2); }
+#message[data-tone="error"] { background: rgba(231, 76, 60, 0.2); }
+#message[data-tone="warning"] { background: rgba(241, 196, 15, 0.25); }
+
+#status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#status-list li {
+  background: rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+#status-list .file { font-weight: 600; }
+
+.pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-left: 10px;
+  text-transform: capitalize;
+}
+
+.pill.pending { background: rgba(241, 196, 15, 0.2); }
+.pill.complete { background: rgba(46, 204, 113, 0.2); }
+.pill.error { background: rgba(231, 76, 60, 0.25); }
+
+#status-list pre {
+  margin-top: 8px;
+  white-space: pre-wrap;
+  background: rgba(0,0,0,0.35);
+  padding: 10px;
+  border-radius: 8px;
 }

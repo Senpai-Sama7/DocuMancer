@@ -2,23 +2,26 @@
   "name": "documancer",
   "version": "2.1.0",
   "description": "Advanced Document to AI-Optimized JSON Converter",
-  "main": "electron-main.js",
+  "main": "frontend/electron-main.js",
   "scripts": {
     "start": "electron .",
+    "dev": "ELECTRON_ENABLE_LOGGING=1 electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "test": "pytest"
   },
   "build": {
     "appId": "com.yourcompany.documancer",
     "productName": "DocuMancer",
     "files": [
-      "electron-main.js",
-      "preload.js",
-      "index.html",
-      "styles.css",
-      "renderer.js",
+      "frontend/**/*",
+      "backend/**/*.py",
+      "backend/requirements.txt",
       "assets/**/*"
     ],
+    "directories": {
+      "output": "dist"
+    },
     "win": {
       "target": [
         "nsis",
@@ -64,7 +67,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^12.0.0",
-    "electron-builder": "^22.0.0"
+    "electron": "^28.3.1",
+    "electron-builder": "^24.13.3"
   }
 }

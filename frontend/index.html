@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'self';">
   <title>DocuMancer ‑ Glass UI</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -18,6 +19,11 @@
     <h1>DocuMancer Converter</h1>
     <p>Drag &amp; drop documents here or click to browse.</p>
     <button class="action">Select Files</button>
+  </div>
+  <div class="status-panel">
+    <h2>Conversion queue</h2>
+    <div id="message" role="status" aria-live="polite"></div>
+    <ul id="status-list"></ul>
   </div>
   <script src="renderer.js"></script>
 </body>
