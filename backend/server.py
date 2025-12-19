@@ -85,9 +85,11 @@ class ConvertRequest(BaseModel):
   def ensure_absolute(cls, value: List[Path]):
     normalized = []
     for item in value:
-      path = Path(item).expanduser()
+      path = Path(item).expanduser().resolve()
       if not path.is_absolute():
         raise ValueError(f"Path must be absolute: {path}")
+      if not path.is_file():
+        raise ValueError(f"Path must be a file: {path}")
       normalized.append(path)
     return normalized
 
