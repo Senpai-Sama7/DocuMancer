@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://127.0.0.1:*">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DocuMancer ‑ Glass UI</title>
   <link rel="stylesheet" href="styles.css">
@@ -10,15 +11,19 @@
 
 <body>
   <div class="title-bar">
-    <button class="btn close" title="Close window"></button>
-    <button class="btn minimize" title="Minimize window"></button>
-    <button class="btn maximize" title="Maximize window"></button>
+    <button class="btn close" title="Close window" data-action="close"></button>
+    <button class="btn minimize" title="Minimize window" data-action="minimize"></button>
+    <button class="btn maximize" title="Maximize window" data-action="toggle-maximize"></button>
   </div>
-  <div class="glass-panel">
+  <main class="glass-panel" id="drop-target">
     <h1>DocuMancer Converter</h1>
     <p>Drag &amp; drop documents here or click to browse.</p>
-    <button class="action">Select Files</button>
-  </div>
+    <button class="action" id="select-files">Select Files</button>
+    <section class="progress" aria-live="polite">
+      <h2>Conversion Queue</h2>
+      <ul class="status-list" id="status-list"></ul>
+    </section>
+  </main>
   <script src="renderer.js"></script>
 </body>
 
