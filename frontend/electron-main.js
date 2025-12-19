@@ -115,12 +115,15 @@ function registerIpcHandlers() {
     if (!files || !files.length) return { results: [] }
     await ensureBackendReady()
 
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 10_000)
     const response = await fetch(`${BACKEND_URL}/convert`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ files }),
-      timeout: 10_000
+      signal: controller.signal
     })
+    clearTimeout(timer)
 
     if (!response.ok) {
       throw new Error(`Conversion failed with status ${response.status}`)
