@@ -47,9 +47,8 @@ DocuMancer/
    ```
 
 3. **Install Python dependencies** (FastAPI service + converter stack)
-   - Preferred: create a local virtualenv and install pinned versions from `backend/requirements.lock.txt` via the helper script.
    ```bash
-   ./scripts/setup-backend.sh
+   pip install -r backend/requirements.txt
    ```
    - Fallback (unlocked): `pip install -r backend/requirements.txt`
 

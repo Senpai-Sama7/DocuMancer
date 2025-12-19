@@ -8,12 +8,6 @@ DocuMancer uses [Electron Builder](https://www.electron.build/) to produce insta
 npm install
 ```
 
-Prepare the Python backend with the pinned dependency set:
-
-```bash
-./scripts/setup-backend.sh
-```
-
 ## package.json scripts
 
 ```json

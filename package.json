@@ -9,8 +9,7 @@
     "pack": "electron-builder --config electron-builder.yml --dir",
     "dist": "electron-builder --config electron-builder.yml",
     "test": "npm run test:backend",
-    "test:backend": "pytest",
-    "lint": "eslint frontend/*.js"
+    "test:backend": "pytest"
   },
   "build": {
     "appId": "com.yourcompany.documancer",
@@ -67,8 +66,7 @@
   },
   "devDependencies": {
     "electron": "^28.3.3",
-    "electron-builder": "^24.13.3",
-    "eslint": "^8.57.0"
+    "electron-builder": "^24.13.3"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"

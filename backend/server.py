@@ -85,9 +85,11 @@ class ConvertRequest(BaseModel):
   def ensure_absolute(cls, value: List[Path]):
     normalized = []
     for item in value:
-      path = Path(item).expanduser()
+      path = Path(item).expanduser().resolve()
       if not path.is_absolute():
         raise ValueError(f"Path must be absolute: {path}")
+      if not path.is_file():
+        raise ValueError(f"Path must be a file: {path}")
       normalized.append(path)
     return normalized
 
@@ -106,16 +108,15 @@ async def request_context(request: Request, call_next):  # noqa: D401
   start = time.perf_counter()
   try:
     response = await call_next(request)
-  finally:
-    duration_ms = round((time.perf_counter() - start) * 1000, 2)
-    logger.info(
-      json.dumps(
-        {
-          "path": request.url.path,
-          "method": request.method,
-          "duration_ms": duration_ms,
-        }
-      ),
+  logger.info(
+    "Request finished",
+    extra={
+      "request_id": request_id,
+      "path": str(request.url.path),
+      "method": request.method,
+      "duration_ms": duration_ms,
+    },
+  )
       extra={"request_id": request_id},
     )
   response.headers["x-request-id"] = request_id
@@ -166,7 +167,7 @@ async def convert(request: ConvertRequest, http_request: Request):
       results.append(ConversionResult(file=file_path, status="error", message=str(exc)))
     except Exception as exc:  # noqa: BLE001
       logger.exception("Failed to convert file", extra={"request_id": http_request.state.request_id, "file": str(file_path)})
-      results.append(ConversionResult(file=file_path, status="error", message="Unexpected conversion failure"))
+      return {"request_id": http_request.state.request_id, "results": [item.model_dump() for item in results]}
 
   return {"request_id": http_request.state.request_id, "results": [json.loads(item.json()) for item in results]}
 
