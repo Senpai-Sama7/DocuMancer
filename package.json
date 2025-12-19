@@ -2,22 +2,24 @@
   "name": "documancer",
   "version": "2.1.0",
   "description": "Advanced Document to AI-Optimized JSON Converter",
-  "main": "electron-main.js",
+  "main": "frontend/electron-main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dev": "ELECTRON_ENABLE_LOGGING=1 electron .",
+    "pack": "electron-builder --config electron-builder.yml --dir",
+    "dist": "electron-builder --config electron-builder.yml",
+    "test": "npm run test:backend",
+    "test:backend": "pytest",
+    "lint": "eslint frontend/*.js"
   },
   "build": {
     "appId": "com.yourcompany.documancer",
     "productName": "DocuMancer",
     "files": [
-      "electron-main.js",
-      "preload.js",
-      "index.html",
-      "styles.css",
-      "renderer.js",
-      "assets/**/*"
+      "frontend/**/*",
+      "backend/**/*",
+      "assets/**/*",
+      "package.json"
     ],
     "win": {
       "target": [
@@ -64,7 +66,11 @@
     }
   },
   "devDependencies": {
-    "electron": "^12.0.0",
-    "electron-builder": "^22.0.0"
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "eslint": "^8.57.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }

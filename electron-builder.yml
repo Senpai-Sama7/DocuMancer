@@ -3,12 +3,10 @@ productName: DocuMancer
 directories:
   output: dist
 files:
-  - electron-main.js
-  - preload.js
-  - index.html
-  - styles.css
-  - renderer.js
+  - frontend/**/*
+  - backend/**/*
   - assets/**/*
+  - package.json
 win:
   target:
     - nsis
