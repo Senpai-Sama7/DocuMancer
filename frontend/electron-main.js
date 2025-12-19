@@ -58,9 +58,18 @@ async function ensureBackendReady() {
 function startBackend() {
   const appPath = app.getAppPath()
   const backendEntry = path.join(appPath, 'backend', 'server.py')
-  const pythonExec = process.env.PYTHON_PATH || 'python3'
+  
+  // Determine the path to the bundled Python executable based on the platform
+  const pythonExecName = process.platform === 'win32' ? 'python.exe' : 'python'
+  // Assuming Python is bundled in a 'python' directory within the app resources
+  const pythonExec = path.join(app.getAppPath(), '..', 'python', pythonExecName)
 
-  backendProcess = spawn(pythonExec, [backendEntry], {
+  // Fallback for development environment, but production should use the bundled Python
+  const finalPythonExec = (app.isPackaged && require('fs').existsSync(pythonExec))
+    ? pythonExec
+    : 'python3'
+
+  backendProcess = spawn(finalPythonExec, [backendEntry], {
     cwd: appPath,
     stdio: ['ignore', 'pipe', 'pipe']
   })
