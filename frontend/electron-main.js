@@ -316,13 +316,18 @@ async function convertFiles(filePaths) {
         let stdout = '';
         let stderr = '';
 
+        let stdoutBuffer = '';
         converterProcess.stdout.on('data', (data) => {
-            const text = data.toString();
-            stdout += text;
+            stdoutBuffer += data.toString();
+            let newlineIndex;
+            while ((newlineIndex = stdoutBuffer.indexOf('\n')) >= 0) {
+                const line = stdoutBuffer.substring(0, newlineIndex).trim();
+                stdoutBuffer = stdoutBuffer.substring(newlineIndex + 1);
+        
+                if (!line) continue;
+                stdout += line + '\n';
 
-            // Parse progress updates from Python output
-            const lines = text.split('\n');
-            for (const line of lines) {
+                // Parse progress updates from Python output
                 if (line.includes('Processing:')) {
                     const match = line.match(/Processing:\s*(\d+)%\s*\((\d+)\/(\d+)\)/);
                     if (match) {
