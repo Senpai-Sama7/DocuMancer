@@ -2,24 +2,126 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DocuMancer ‑ Glass UI</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; font-src 'self';">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer">
+    <title>DocuMancer - Document Converter</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  <div class="title-bar">
-    <button class="btn close" title="Close window"></button>
-    <button class="btn minimize" title="Minimize window"></button>
-    <button class="btn maximize" title="Maximize window"></button>
-  </div>
-  <div class="glass-panel">
-    <h1>DocuMancer Converter</h1>
-    <p>Drag &amp; drop documents here or click to browse.</p>
-    <button class="action">Select Files</button>
-  </div>
-  <script src="renderer.js"></script>
+    <!-- Custom Title Bar -->
+    <div class="title-bar">
+        <div class="window-controls">
+            <button class="btn close" title="Close (Cmd/Ctrl+Q)" aria-label="Close window"></button>
+            <button class="btn minimize" title="Minimize (Cmd/Ctrl+M)" aria-label="Minimize window"></button>
+            <button class="btn maximize" title="Maximize" aria-label="Maximize window"></button>
+        </div>
+        <div class="title-text">
+            <span class="app-title">DocuMancer</span>
+            <span class="app-version">v2.1.0</span>
+        </div>
+        <div class="title-spacer"></div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="glass-panel">
+            <!-- Header Section -->
+            <header class="panel-header">
+                <h1 class="panel-title">DocuMancer Converter</h1>
+                <p class="panel-subtitle">Convert documents to AI-optimized JSON format</p>
+            </header>
+
+            <!-- Drop Zone -->
+            <div class="drop-zone" role="button" tabindex="0" aria-label="Drop files here or click to select">
+                <div class="drop-zone-content">
+                    <div class="drop-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <p class="drop-text">Drag & drop documents here</p>
+                    <p class="drop-hint">or click to browse</p>
+                    <div class="supported-formats">
+                        <span class="format-badge">PDF</span>
+                        <span class="format-badge">DOCX</span>
+                        <span class="format-badge">TXT</span>
+                        <span class="format-badge">EPUB</span>
+                        <span class="format-badge">Images</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File List Section -->
+            <section class="file-section">
+                <div class="section-header">
+                    <h2 class="section-title">Selected Files</h2>
+                    <button class="clear-btn" title="Clear all files (Cmd/Ctrl+Backspace)">Clear All</button>
+                </div>
+                <div class="file-list" role="list" aria-label="Selected files">
+                    <div class="empty-state">No files selected</div>
+                </div>
+            </section>
+
+            <!-- Status Message -->
+            <div class="status-message" role="status" aria-live="polite"></div>
+
+            <!-- Progress Section -->
+            <div class="progress-container" style="display: none;">
+                <div class="progress-header">
+                    <span class="progress-label">Converting...</span>
+                    <span class="progress-text">0%</span>
+                </div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="action select-btn" title="Select files (Cmd/Ctrl+O)">
+                    <span class="btn-icon">+</span>
+                    Select Files
+                </button>
+                <button class="action convert-btn primary" disabled title="Start conversion (Cmd/Ctrl+Enter)">
+                    <span class="btn-icon">&#9654;</span>
+                    Convert
+                </button>
+                <button class="action cancel-btn danger" style="display: none;" title="Cancel (Escape)">
+                    <span class="btn-icon">&#10006;</span>
+                    Cancel
+                </button>
+            </div>
+
+            <!-- Output Section -->
+            <section class="output-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Converted Files</h2>
+                    <button class="open-output-btn" title="Open output folder (Cmd/Ctrl+Shift+O)">
+                        <span class="btn-icon">&#128193;</span>
+                        Open Folder
+                    </button>
+                </div>
+                <div class="results-list" role="list" aria-label="Converted files"></div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="panel-footer">
+                <div class="keyboard-hints">
+                    <span class="hint"><kbd>Cmd/Ctrl</kbd>+<kbd>O</kbd> Open</span>
+                    <span class="hint"><kbd>Cmd/Ctrl</kbd>+<kbd>Enter</kbd> Convert</span>
+                    <span class="hint"><kbd>Esc</kbd> Cancel</span>
+                </div>
+            </footer>
+        </div>
+    </main>
+
+    <script src="renderer.js"></script>
 </body>
 
 </html>
