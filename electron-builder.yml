@@ -1,41 +1,101 @@
-appId: com.yourcompany.documancer
+# electron-builder.yml - Production build configuration for DocuMancer
+# Note: Primary configuration is in package.json. This file provides additional overrides.
+
+appId: com.documancer.app
 productName: DocuMancer
+
 directories:
   output: dist
+  buildResources: assets
+
 files:
-  - electron-main.js
-  - preload.js
-  - index.html
-  - styles.css
-  - renderer.js
+  - frontend/**/*
+  - backend/**/*
+  - "!backend/__pycache__/**"
+  - "!backend/*.pyc"
+  - "!backend/tests/**"
   - assets/**/*
+  - package.json
+
+extraResources:
+  - from: backend
+    to: backend
+    filter:
+      - "**/*"
+      - "!__pycache__/**"
+      - "!*.pyc"
+      - "!tests/**"
+
 win:
   target:
-    - nsis
+    - target: nsis
+      arch:
+        - x64
+        - ia32
     - zip
-  artifactName: "DocuMancer-Setup-${version}.${ext}"
-  nsis:
-    oneClick: false
-    perMachine: false
-    allowToChangeInstallationDirectory: true
+  icon: assets/app_icon.ico
+  artifactName: DocuMancer-Setup-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: DocuMancer
+  uninstallDisplayName: DocuMancer ${version}
+
 mac:
   target:
-    - dmg
+    - target: dmg
+      arch:
+        - x64
+        - arm64
     - zip
-  category: public.app-category.productivity
   icon: assets/app_icon.icns
-  dmg:
-    background: assets/dmg-background.png
-    contents:
-      - x: 410
-        y: 150
-        type: link
-        path: /Applications
-      - x: 130
-        y: 150
-        type: file
+  category: public.app-category.productivity
+  hardenedRuntime: true
+  gatekeeperAssess: false
+
+dmg:
+  background: assets/dmg-background.png
+  icon: assets/app_icon.icns
+  iconSize: 100
+  contents:
+    - x: 410
+      y: 150
+      type: link
+      path: /Applications
+    - x: 130
+      y: 150
+      type: file
+
 linux:
   target:
     - AppImage
     - deb
+    - rpm
+  icon: assets/logo.png
   category: Utility
+  maintainer: DocuMancer Team
+  synopsis: Document to AI-Optimized JSON Converter
+  description: Convert PDF, DOCX, TXT, EPUB, and images to structured JSON for AI consumption
+
+deb:
+  depends:
+    - python3
+    - python3-pip
+    - tesseract-ocr
+
+rpm:
+  depends:
+    - python3
+    - python3-pip
+    - tesseract
+
+appImage:
+  artifactName: DocuMancer-${version}-${arch}.${ext}
+
+publish:
+  provider: github
+  releaseType: draft

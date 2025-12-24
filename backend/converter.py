@@ -744,10 +744,12 @@ class DocumentParser:
         """Normalize text for consistent processing"""
         text = re.sub(r'\n\s*\n', '\n\n', text)
         text = re.sub(r'[ \t]+', ' ', text)
-        text = re.sub(r'["""]', '"', text)
-        text = re.sub(r'[''']', "'", text)
-        text = re.sub(r'—', '-', text)
-        text = re.sub(r'…', '...', text)
+        # Normalize smart quotes to regular quotes
+        text = re.sub(r'[\u201C\u201D\u201E\u201F\u2033\u2036]', '"', text)
+        text = re.sub(r'[\u2018\u2019\u201A\u201B\u2032\u2035]', "'", text)
+        # Normalize dashes and ellipsis
+        text = re.sub(r'[\u2014\u2013\u2012]', '-', text)
+        text = re.sub(r'\u2026', '...', text)
         text = re.sub(r'(\w+)-\n(\w+)', r'\1\2', text)
         text = re.sub(r'(\w)\.(\n)(\w)', r'\1. \3', text)
         text = re.sub(r'[\u00A0\u2000-\u200B\u202F\u205F\u3000]', ' ', text)
