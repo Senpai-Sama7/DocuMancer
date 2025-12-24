@@ -1,47 +1,108 @@
 {
   "name": "documancer",
   "version": "2.1.0",
-  "description": "Advanced Document to AI-Optimized JSON Converter",
+  "description": "Advanced Document to AI-Optimized JSON Converter - Convert PDF, DOCX, TXT, EPUB, and images to structured JSON",
   "main": "frontend/electron-main.js",
+  "author": "DocuMancer Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/documancer/documancer.git"
+  },
+  "keywords": [
+    "document-converter",
+    "pdf",
+    "docx",
+    "epub",
+    "ocr",
+    "ai",
+    "json",
+    "electron"
+  ],
   "scripts": {
     "start": "electron .",
-    "dev": "ELECTRON_ENABLE_LOGGING=1 electron .",
-    "pack": "electron-builder --config electron-builder.yml --dir",
-    "dist": "electron-builder --config electron-builder.yml",
-    "test": "npm run test:backend",
-    "test:backend": "pytest"
+    "dev": "NODE_ENV=development electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:python": "cd backend && python -m pytest tests/ -v --cov=.",
+    "lint": "eslint frontend/*.js",
+    "lint:fix": "eslint frontend/*.js --fix",
+    "format": "prettier --write \"frontend/**/*.{js,css,html}\"",
+    "clean": "rimraf dist out",
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "appId": "com.yourcompany.documancer",
+    "appId": "com.documancer.app",
     "productName": "DocuMancer",
+    "copyright": "Copyright © 2024 DocuMancer",
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
     "files": [
       "frontend/**/*",
       "backend/**/*",
+      "!backend/__pycache__/**",
+      "!backend/*.pyc",
+      "!backend/tests/**",
       "assets/**/*",
       "package.json"
     ],
+    "extraResources": [
+      {
+        "from": "backend",
+        "to": "backend",
+        "filter": [
+          "**/*",
+          "!__pycache__/**",
+          "!*.pyc",
+          "!tests/**"
+        ]
+      }
+    ],
     "win": {
       "target": [
-        "nsis",
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
         "zip"
       ],
-      "artifactName": "DocuMancer-Setup-${version}.${ext}"
+      "icon": "assets/app_icon.ico",
+      "artifactName": "DocuMancer-Setup-${version}-${arch}.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DocuMancer"
     },
     "mac": {
       "target": [
-        "dmg",
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
         "zip"
       ],
-      "category": "public.app-category.productivity"
+      "icon": "assets/app_icon.icns",
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
     },
     "dmg": {
       "background": "assets/dmg-background.png",
       "icon": "assets/app_icon.icns",
+      "iconSize": 100,
       "contents": [
         {
           "x": 410,
@@ -59,16 +120,30 @@
     "linux": {
       "target": [
         "AppImage",
-        "deb"
+        "deb",
+        "rpm"
       ],
-      "category": "Utility"
+      "icon": "assets/logo.png",
+      "category": "Utility",
+      "maintainer": "DocuMancer Team",
+      "synopsis": "Document to AI-Optimized JSON Converter",
+      "description": "Convert PDF, DOCX, TXT, EPUB, and images to structured JSON for AI consumption"
+    },
+    "appImage": {
+      "artifactName": "DocuMancer-${version}-${arch}.${ext}"
     }
   },
+  "dependencies": {},
   "devDependencies": {
-    "electron": "^28.3.3",
-    "electron-builder": "^24.13.3"
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.0"
   },
-  "dependencies": {
-    "node-fetch": "^2.7.0"
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
