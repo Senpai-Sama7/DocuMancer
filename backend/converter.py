@@ -1311,12 +1311,16 @@ def main():
     file_paths = []
     for pattern in args.files:
         path = Path(pattern)
+        if path.is_dir():
+            logger.warning(f"Skipping directory: {path}. To process files inside, use a glob pattern like '{path}/*'")
+            continue
         if path.exists():
             file_paths.append(path)
         else:
             import glob
             matched = glob.glob(pattern)
-            file_paths.extend(Path(m) for m in matched)
+            # Filter out directories from glob results
+            file_paths.extend(Path(m) for m in matched if not Path(m).is_dir())
 
     if not file_paths:
         logger.error("No valid files found to convert")
