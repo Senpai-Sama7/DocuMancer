@@ -140,16 +140,18 @@ contextBridge.exposeInMainWorld('api', {
             return;
         }
 
-        // Create wrapper that strips the event object for security
+        // Create wrapper that strips the event object and removes itself
         const wrapper = (event, ...args) => {
             try {
                 callback(...args);
             } catch (error) {
                 console.error(`[Preload] Callback error on ${channel}:`, error);
+            } finally {
+                ipcRenderer.removeListener(channel, wrapper);
             }
         };
 
-        ipcRenderer.once(channel, wrapper);
+        ipcRenderer.on(channel, wrapper);
     },
 
     /**
