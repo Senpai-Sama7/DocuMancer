@@ -523,6 +523,7 @@ app.on('before-quit', () => {
 
 // Handle certificate errors in production
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    event.preventDefault();
     // In production, reject untrusted certificates
     callback(false);
 });
