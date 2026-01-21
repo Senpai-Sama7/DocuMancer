@@ -7,7 +7,7 @@
 # DocuMancer
 
 ---
-A modern Electron application for document conversion and management, built with a hardened Python backend and Electron frontend.
+A modern Electron application for document conversion and management, built with a hardened Python converter backend and Electron frontend.
 
 ## 🏗️ Project Structure
 
@@ -54,7 +54,7 @@ DocuMancer/
 
 ### Development
 
-1. **Run the app in development** – starts Electron and will spawn the FastAPI backend when conversions are requested:
+1. **Run the app in development** – starts Electron and spawns the Python converter when conversions are requested:
    ```bash
    npm run dev
    ```
@@ -125,7 +125,9 @@ pytest -q
 
 ## 🧱 Backend configuration
 
-The Electron shell launches `backend/server.py` with environment-driven settings:
+The Electron shell launches `backend/converter.py` for local conversions and emits progress updates that are parsed by the UI.
+
+Optional FastAPI service (`backend/server.py`) can be run separately for lightweight text conversions and health checks with environment-driven settings:
 
 - `DOCUMANCER_HOST` / `DOCUMANCER_PORT` – override bind address and port
 - `DOCUMANCER_LOG_LEVEL` – `DEBUG`, `INFO`, `WARNING`, etc.
@@ -148,4 +150,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🐛 Issues
 
 If you encounter any issues, please open an issue on GitHub.
-

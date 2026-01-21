@@ -112,14 +112,21 @@ except ImportError as e:
 # Enhanced dependencies
 try:
     import nltk
+    allow_downloads = os.environ.get('DOCUMANCER_NLTK_DOWNLOAD', '').lower() in {'1', 'true', 'yes'}
     try:
         nltk.data.find('tokenizers/punkt')
     except LookupError:
-        nltk.download('punkt', quiet=True)
+        if allow_downloads:
+            nltk.download('punkt', quiet=True)
+        else:
+            logger.warning("NLTK punkt not found. Set DOCUMANCER_NLTK_DOWNLOAD=1 to allow downloads.")
     try:
         nltk.data.find('corpora/stopwords')
     except LookupError:
-        nltk.download('stopwords', quiet=True)
+        if allow_downloads:
+            nltk.download('stopwords', quiet=True)
+        else:
+            logger.warning("NLTK stopwords not found. Set DOCUMANCER_NLTK_DOWNLOAD=1 to allow downloads.")
     from nltk.corpus import stopwords
     from nltk.tokenize import word_tokenize, sent_tokenize
     available_modules['nltk'] = True
