@@ -108,19 +108,25 @@ async def request_context(request: Request, call_next):  # noqa: D401
   start = time.perf_counter()
   try:
     response = await call_next(request)
-  logger.info(
-    "Request finished",
-    extra={
-      "request_id": request_id,
-      "path": str(request.url.path),
-      "method": request.method,
-      "duration_ms": duration_ms,
-    },
-  )
-      extra={"request_id": request_id},
+    response.headers["x-request-id"] = request_id
+    return response
+  except Exception:  # noqa: BLE001
+    logger.exception(
+      "Request failed",
+      extra={"request_id": request_id, "path": str(request.url.path), "method": request.method},
     )
-  response.headers["x-request-id"] = request_id
-  return response
+    raise
+  finally:
+    duration_ms = (time.perf_counter() - start) * 1000
+    logger.info(
+      "Request finished",
+      extra={
+        "request_id": request_id,
+        "path": str(request.url.path),
+        "method": request.method,
+        "duration_ms": duration_ms,
+      },
+    )
 
 
 @app.get("/health")
